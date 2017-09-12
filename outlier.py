@@ -1,6 +1,19 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from visualisation import scatter_plot
+from visualisation import scatter_plot, dist_plot
+
+
+def summary(data, key, data_keys):
+    values = np.nan_to_num(np.array([data[k][key] for k in data]).astype(np.float64))
+    dist_plot(values[values > 0], key)
+    return {'count': len(values), 
+            'mean': values.mean(), 
+            'std': values[values > 0].std(),  # zero means NaN converted to numeric
+            'min': values[values > 0].min(),  # zero means NaN converted to numeric
+            'max': values.max(),
+            'argmax': data_keys[values.argmax()],
+            'median': np.median(values[values > 0]),  # zero means NaN converted to numeric
+            'iqr': np.percentile(values[values > 0], [25 ,75])}
 
 
 class OutlierCleaner:
