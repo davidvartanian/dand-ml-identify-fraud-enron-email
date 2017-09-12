@@ -1,6 +1,12 @@
 import matplotlib.pyplot as plt
 
 
+def dist_plot(X, xlabel='X'):
+    plt.hist(X, 50)
+    plt.grid(True)
+    plt.show()
+
+
 def scatter_plot(X, Y, xlabel='X', ylabel='Y', xplot=None, yplot=None):
     """
     Render a scatter plot
