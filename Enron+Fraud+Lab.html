@@ -11811,6 +11811,7 @@ div#notebook {
 <li><a href="https://www.quora.com/What-is-the-best-way-to-understand-the-terms-precision-and-recall">https://www.quora.com/What-is-the-best-way-to-understand-the-terms-precision-and-recall</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Precision_and_recall">https://en.wikipedia.org/wiki/Precision_and_recall</a></li>
 <li><a href="https://en.wikipedia.org/wiki/F1_score">https://en.wikipedia.org/wiki/F1_score</a></li>
+<li><a href="https://stats.stackexchange.com/questions/49540/understanding-stratified-cross-validation">https://stats.stackexchange.com/questions/49540/understanding-stratified-cross-validation</a></li>
 </ul>
 
 </div>
@@ -11818,7 +11819,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># notebook/visualisation imports</span>
@@ -11835,7 +11836,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># poi_id.py</span>
@@ -11856,7 +11857,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Task 1: Select what features you&#39;ll use.</span>
@@ -11973,7 +11974,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Task 2: Remove outliers</span>
@@ -12708,13 +12709,15 @@ MNAlqRIGuiRVwkCXpEoY6JJUCQNdkirx/zB02ibUqmrcAAAAAElFTkSuQmCC
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Task 2: Remove outliers</span>
 
 <span class="c1"># remove known TOTAL outlier</span>
 <span class="n">outlier</span> <span class="o">=</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;TOTAL&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">outlier</span> <span class="o">=</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;THE TRAVEL AGENCY IN THE PARK&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">outlier</span> <span class="o">=</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;LOCKHART EUGENE E&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="c1"># data = featureFormat(data_dict, features_list)</span>
 <span class="c1"># labels, features = targetFeatureSplit(data)</span>
 </pre></div>
@@ -14396,8 +14399,9 @@ Machine learning can help in this task by quantifying information, selecting the
 <p>There were many outliers in the data set. However, most of them were actually useful because that's what we wanted to find. Only one outlier was actually wrong information, the one with key <em>TOTAL</em>, and I removed it.</p>
 <p>This is a quick summary of the dataset:</p>
 <ul>
-<li>total number of data points: 145</li>
-<li>allocation across classes (POI/non-POI): 18 POI/127 non-POI</li>
+<li>total number of data points: 146</li>
+<li>outliers: 3</li>
+<li>allocation across classes (POI/non-POI): 18 POI/125 non-POI</li>
 <li>number of features used: 6</li>
 </ul>
 <h5 id="Features-with-many-missing-values">Features with many missing values<a class="anchor-link" href="#Features-with-many-missing-values">&#182;</a></h5><ul>
@@ -14483,13 +14487,14 @@ Machine learning can help in this task by quantifying information, selecting the
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Question-4">Question 4<a class="anchor-link" href="#Question-4">&#182;</a></h3><p>What does it mean to tune the parameters of an algorithm, and what can happen if you don’t do this well?  How did you tune the parameters of your particular algorithm? What parameters did you tune? (Some algorithms do not have parameters that you need to tune -- if this is the case for the one you picked, identify and briefly explain how you would have done it for the model that was not your final choice or a different model that does utilize parameter tuning, e.g. a decision tree classifier).  [relevant rubric items: “discuss parameter tuning”, “tune the algorithm”]</p>
-<h3 id="Answer">Answer<a class="anchor-link" href="#Answer">&#182;</a></h3><p>Parameter tunning is an important process of machine learning, in order to get the best performance of the algorithm being used. Those parameters are related to the data set and the type of data used on each feature. This is one of the reasons to call machine learning an <em>artistic</em> work, because the same parameter set won't necessarily work fine with other dataset.</p>
-<p>In this project, I got several examples of parameter tunning effect on classifier performance.
+<h3 id="Answer">Answer<a class="anchor-link" href="#Answer">&#182;</a></h3><p>Parameter tuning is an important process of machine learning, in order to get the best performance of the algorithm being used. Those parameters are related to the data set and the type of data used on each feature. This is one of the reasons to call machine learning an <em>artistic</em> work, because the same parameter set won't necessarily work fine with other dataset.</p>
+<p>In this project, I got several examples of parameter tuning effect on classifier performance.
 I used GridSearchCV on each classifier testing a number of values for each parameter. But when I was more confident about the range of value to use I moved the parameters to the static configuration, because each value multiplies the time spent by GridSearchCV to test all values. Especially when running the classifier with K-Fold Cross Validation, the first test took more than 3 hours to finish, while without GridSearchCV it took just a few seconds. Then I had to fine-tune parameters by hand. I found this way much faster.</p>
-<h4 id="Some-examples-of-parameter-tunning-in-my-project">Some examples of parameter tunning in my project<a class="anchor-link" href="#Some-examples-of-parameter-tunning-in-my-project">&#182;</a></h4><p>SVC's C parameter is a number with a large range of possible values. Setting it to 1, to 1000 or to 10000 make the algorithm apply a penalty to the calculated error. which means that large values of C result in low bias and high variance. The opposite effect occurs with a high value ofo C.</p>
+<h4 id="Some-examples-of-parameter-tuning-in-my-project">Some examples of parameter tuning in my project<a class="anchor-link" href="#Some-examples-of-parameter-tuning-in-my-project">&#182;</a></h4><p>SVC's C parameter is a number with a large range of possible values. Setting it to 1, to 1000 or to 10000 make the algorithm apply a penalty to the calculated error. which means that large values of C result in low bias and high variance. The opposite effect occurs with a high value ofo C.</p>
 <p>SVC's gamma parameter (from o to 1) gives control of the gaussian peak on non-linear classifications, using kernel='rbf'. A value of gamma close to 0 results in low bias and high variance. The opposite will happen using a value close to 1.</p>
 <p>Playing with C and gamma, I ended up getting good metrics with C=23000, gamma=.587. A tiny difference in any of both parameters would make decrease the performance.</p>
 <p>SelectKBest's k parameter was definitely a big influence in all my tests, in a less ambiguous way. Selecting more features affected the metrics right away. It affected the results of all tested classifiers.</p>
+<h4 id="Risks-when-tuning-parameters">Risks when tuning parameters<a class="anchor-link" href="#Risks-when-tuning-parameters">&#182;</a></h4><p>Parameter tuning is responsible of over/under fitting a model. While each parameter has different approaches, all of them end up with poor performance (underfitting, provoking high variance) in training time and not being suitable for predictions, or with too good performance in training time (overfitting, provoking high bias), and poor performance in prediction time.</p>
 
 </div>
 </div>
@@ -14500,8 +14505,9 @@ I used GridSearchCV on each classifier testing a number of values for each param
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Question-5">Question 5<a class="anchor-link" href="#Question-5">&#182;</a></h3><p>What is validation, and what’s a classic mistake you can make if you do it wrong? How did you validate your analysis?  [relevant rubric items: “discuss validation”, “validation strategy”]</p>
-<h3 id="Answer">Answer<a class="anchor-link" href="#Answer">&#182;</a></h3><p>Validation is the simple process of testing the classifier with data points that the classifier has never seen before against the true results. A technique used in this course is called K-Fold Cross Validation, which consists in splitting the data set in k pieces. Iterating k times, the classifier will use all pieces except one as a training set, and the one not used for training will be used for testing. A common error is not to shuffle the data set before splitting it. Resulting in an unbalanced training set, training for one class and testing for another class. It is important to use validation techniques to make sure that the algorithm is doing what is expected to do.</p>
+<h3 id="Answer">Answer<a class="anchor-link" href="#Answer">&#182;</a></h3><p>Validation is the simple process of testing the classifier with data points that the classifier has never seen before against the true results. A technique used in this course is called K-Fold Cross Validation, which consists in splitting the data set in k pieces. Iterating k times, the classifier will use all pieces except one as a training set, and the one not used for training will be used for testing. A common error is not to shuffle the data set before splitting it. Resulting in an imbalanced training set, training for one class and testing for another class. It is important to use validation techniques to make sure that the algorithm is doing what is expected to do.</p>
 <p>At the beginning of the project, I splitted the data set and calculated scores. But going further I started using K-Fold Cross Validation to get a much more robust validation.</p>
+<p>In addition, since this data set is quite small and highly imbalanced, I used <em>StratifiedShuffleSplit</em> in order to split the dataset making sure that every fold will be representative of the whole.</p>
 
 </div>
 </div>
@@ -14515,13 +14521,13 @@ I used GridSearchCV on each classifier testing a number of values for each param
 <h3 id="Answer">Answer<a class="anchor-link" href="#Answer">&#182;</a></h3><p>After validating prediction results, there are several ways to evaluate the results in a more concrete and accurate way, given each individual prediction compared to the true value (true positive, true negative, false positive, false negative). A confusion matrix could be used to visualise this information.</p>
 <p>The metrics that I learned in this course were recall, precision and f1-score.</p>
 <ul>
-<li>recall: true positive / (true positive + false negative)</li>
-<li>precision: true positive / (true positive + false positive)</li>
-<li>f1-score: 2 <em> (precision </em> recall) / (precision + recall)</li>
+<li><strong>recall</strong> (also called sensitivity): relevant instances that have been retrieved over the total amount of relevant instances</li>
+<li><strong>precision</strong>: relevant instances among the retrieved instances</li>
+<li><strong>f1-score</strong>: measure of test's accuracy using both recall and precision</li>
 </ul>
-<p>In this project I got good accuracy score (over 0.88) but quite low recall (about 0.6) and precision (about 0.3). The reasons are two: too small dataset, and very unbalanced data point class (18 POI against 127 non-POI).</p>
-<h4 id="Recall-=-0.6">Recall = 0.6<a class="anchor-link" href="#Recall-=-0.6">&#182;</a></h4><p>It means that the algorithm predicted true positives 60% of times.</p>
-<h4 id="Precision-=-0.3">Precision = 0.3<a class="anchor-link" href="#Precision-=-0.3">&#182;</a></h4><p>It means that the algorithm predicted true positives and true negatives only 30% of times.</p>
+<p>In this project I got good accuracy score (over 0.88) but quite low recall (about 0.6) and precision (about 0.3). The reasons are two: too small dataset, and the so called problem class imbalance (18 POI against 125 non-POI), although StratifiedShuffleSplit has been used.</p>
+<h4 id="Recall-=-0.6">Recall = 0.6<a class="anchor-link" href="#Recall-=-0.6">&#182;</a></h4><p>It means that the algorithm predicted 60% of relevant elements over all retrieved elements.</p>
+<h4 id="Precision-=-0.3">Precision = 0.3<a class="anchor-link" href="#Precision-=-0.3">&#182;</a></h4><p>It means that only 30% of predicted elements were relevant over all retrieved elements.</p>
 
 </div>
 </div>

@@ -29,7 +29,7 @@ def compute_email_addresses_per_poi(found_pois, pois_count):
         given a dictionary with pois and the total count,
         calculate the ratio of email addresses per poi
     """
-    return np.float32(sum(found_pois.itervalues()) / (pois_count+1e-10))
+    return np.float32(sum(found_pois.itervalues()) / (pois_count+1e-10))  # avoid zero division
 
 
 def compute_poi_mention_rate(poi_count, n_pois_total):
@@ -38,6 +38,24 @@ def compute_poi_mention_rate(poi_count, n_pois_total):
         return the ratio of pois mentioned
     """
     return poi_count / float(n_pois_total)
+
+
+def compute_email_addresses_per_poi_df(row, vectorizer):
+    """ FEATURE
+        vectorized version of compute_email_addresses_per_poi
+        to be used by pandas.DataFrame.apply()
+    """
+    found_pois, poi_count = find_pois_in_data_point(row, vectorizer, poi_email_dict)
+    return compute_email_addresses_per_poi(found_pois, poi_count)
+
+
+def compute_poi_mention_rate_df(row, vectorizer, n_pois):
+    """ FEATURE
+        vectorized version of compute_poi_mention_rate
+        to be used by pandas.DataFrame.apply()
+    """
+    _, poi_count = find_pois_in_data_point(row, vectorizer, poi_email_dict)
+    return compute_poi_mention_rate(poi_count, n_pois)
 
 
 def poi_vectorizer(poi_email_dict):
@@ -109,6 +127,12 @@ def get_email_data_from_pois(dataset):
 
 
 def find_pois_in_data_point(data_point, vectorizer, poi_email_dict):
+    """
+    Search for POIs on data_point emails
+    Return
+        POIs
+        amount of found POIs
+    """
     found_pois = defaultdict(int)
     email_text = ''
     try:

@@ -4,7 +4,7 @@ import sys
 import pickle
 
 from udacity import featureFormat, targetFeatureSplit
-from tester import dump_classifier_and_data
+from tester import dump_classifier_and_data, test_classifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cross_validation import StratifiedShuffleSplit
 from sklearn.feature_selection import SelectKBest
@@ -26,7 +26,10 @@ with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
 ### Task 2: Remove outliers
-data_dict.pop('TOTAL', 0)
+data_dict.pop('TOTAL', 0)  # wrong row
+data_dict.pop('THE TRAVEL AGENCY IN THE PARK', 0)  # not a real person
+data_dict.pop('LOCKHART EUGENE E', 0)  # all features are NaN
+
 
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
@@ -35,8 +38,8 @@ my_df = pd.DataFrame(data_dict.values(), columns=data_dict[data_dict.keys()[0]].
 
 print 'Adding new features...'
 # Features: 
-# - from_poi_to_this_person_ratio
-# - from_this_person_to_poi
+# - from_poi_to_this_person_ratio (from_poi_to_this_person / to_messages)
+# - from_this_person_to_poi (from_this_person_to_poi / from_messages)
 from feature_engineering import compute_poi_email_ratio
 
 my_df['from_poi_to_this_person_ratio'] = my_df.apply(lambda row: compute_poi_email_ratio(
@@ -47,23 +50,16 @@ my_df['from_this_person_to_poi_ratio'] = my_df.apply(lambda row: compute_poi_ema
 
 ### Task 3: Create new feature(s)
 # Features: 
-# - email_addresses_per_poi
-# - poi_mention_rate
-from feature_engineering import poi_email_dict, find_pois_in_data_point, poi_vectorizer, compute_email_addresses_per_poi, compute_poi_mention_rate
+# - email_addresses_per_poi (found_pois for this row / count of POIs mentioned)
+# - poi_mention_rate (count of POIs mentioned / total amount of POIs)
+from feature_engineering import poi_email_dict, find_pois_in_data_point, poi_vectorizer,\
+                                compute_email_addresses_per_poi_df, compute_poi_mention_rate_df
 
 vectorizer = poi_vectorizer(poi_email_dict)
 n_pois = len(my_df[my_df['poi'] == True].index)
 
-def compute_email_addresses_per_poi_df(row):
-    found_pois, poi_count = find_pois_in_data_point(row, vectorizer, poi_email_dict)
-    return compute_email_addresses_per_poi(found_pois, poi_count)
-
-def compute_poi_mention_rate_df(row):
-    _, poi_count = find_pois_in_data_point(row, vectorizer, poi_email_dict)
-    return compute_poi_mention_rate(poi_count, n_pois)
-
-my_df['email_addresses_per_poi'] = my_df.apply(lambda row: compute_email_addresses_per_poi_df(row), axis=1)
-my_df['poi_mention_rate'] = my_df.apply(lambda row: compute_poi_mention_rate_df(row), axis=1)
+my_df['email_addresses_per_poi'] = my_df.apply(lambda row: compute_email_addresses_per_poi_df(row, vectorizer), axis=1)
+my_df['poi_mention_rate'] = my_df.apply(lambda row: compute_poi_mention_rate_df(row, vectorizer, n_pois), axis=1)
 
 
 # Feature scaling
@@ -118,61 +114,7 @@ RESULTS_FORMAT_STRING = "\tTotal predictions: {:4d}\tTrue positives: {:4d}\tFals
 # features_train, features_test, labels_train, labels_test = \
 #     train_test_split(features, labels, test_size=0.3, random_state=42)
 print 'Training classifier...'
-data = featureFormat(my_dataset, features_list, sort_keys = True)
-labels, features = targetFeatureSplit(data)
-cv = StratifiedShuffleSplit(labels, 1000, random_state = 42)
-true_negatives = 0
-false_negatives = 0
-true_positives = 0
-false_positives = 0
-for train_idx, test_idx in cv:
-    features_train = []
-    features_test  = []
-    labels_train   = []
-    labels_test    = []
-    for ii in train_idx:
-        features_train.append( features[ii] )
-        labels_train.append( labels[ii] )
-    for jj in test_idx:
-        features_test.append( features[jj] )
-        labels_test.append( labels[jj] )
-    clf.fit(features_train, labels_train)
-    predictions = clf.predict(features_test)
-    for prediction, truth in zip(predictions, labels_test):
-        if prediction == 0 and truth == 0:
-            true_negatives += 1
-        elif prediction == 0 and truth == 1:
-            false_negatives += 1
-        elif prediction == 1 and truth == 0:
-            false_positives += 1
-        elif prediction == 1 and truth == 1:
-            true_positives += 1
-        else:
-            print "Warning: Found a predicted label not == 0 or 1."
-            print "All predictions should take value 0 or 1."
-            print "Evaluating performance for processed predictions:"
-            break
-
-try:
-    print 'Evaluating...'
-    total_predictions = true_negatives + false_negatives + false_positives + true_positives
-    accuracy = 1.0*(true_positives + true_negatives)/total_predictions
-    precision = 1.0*true_positives/(true_positives+false_positives)
-    recall = 1.0*true_positives/(true_positives+false_negatives)
-    f1 = 2.0 * true_positives/(2*true_positives + false_positives+false_negatives)
-    f2 = (1+2.0*2.0) * precision*recall/(4*precision + recall)
-    selector = clf.named_steps['feature_selection']
-    feature_scores = sorted([(f,s) for f,s in zip(features_list, selector.scores_)], key=lambda x: x[1], reverse=True)
-    print clf
-    print PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision = 5)
-    print RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives)
-    print ""
-    print 'Feature Selection Results:'
-    for f,s in feature_scores:
-        print ' - %s: %f' % (f,s)
-except Exception as e:
-    print 'Exception thrown while computing training/prediction results'
-    print e
+test_classifier(clf, my_dataset, features_list, folds = 1000)
 
 ### Task 6: Dump your classifier, dataset, and features_list so anyone can
 ### check your results. You do not need to change anything below, but make sure
