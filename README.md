@@ -2,10 +2,11 @@
 ## Machine Learning - Identify Fraud from Enron Email
 
 ## Abstract
-The scripts asume that *maildir* is in the root of the project (which is not included). You can create a symbolic link to the actual path:
+The scripts asume that *maildir* and *emails_by_address* (from Udacity's ud120-projects repository) directories are in the root of the project (which is not included). You can create a symbolic link to the actual path:
 ```
 $ cd dand-ml-identify-fraud-enron-email
 $ ln -s /actual/path/to/maildir .
+$ ln -s /actual/path/to/ud120-projects/final_project/emails\_by\_address .
 ```
 
 ## Development Process & Documentation
