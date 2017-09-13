@@ -1,3 +1,7 @@
+# Added by me
+maildir
+emails_by_address
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
