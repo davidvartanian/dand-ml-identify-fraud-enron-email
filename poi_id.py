@@ -52,7 +52,7 @@ my_df['from_this_person_to_poi_ratio'] = my_df.apply(lambda row: compute_poi_ema
 from feature_engineering import poi_email_dict, find_pois_in_data_point, poi_vectorizer, compute_email_addresses_per_poi, compute_poi_mention_rate
 
 vectorizer = poi_vectorizer(poi_email_dict)
-n_pois = len(my_df.index)
+n_pois = len(my_df[my_df['poi'] == True].index)
 
 def compute_email_addresses_per_poi_df(row):
     found_pois, poi_count = find_pois_in_data_point(row, vectorizer, poi_email_dict)
@@ -138,7 +138,6 @@ for train_idx, test_idx in cv:
         labels_test.append( labels[jj] )
     clf.fit(features_train, labels_train)
     predictions = clf.predict(features_test)
-    print predictions
     for prediction, truth in zip(predictions, labels_test):
         if prediction == 0 and truth == 0:
             true_negatives += 1
@@ -162,10 +161,15 @@ try:
     recall = 1.0*true_positives/(true_positives+false_negatives)
     f1 = 2.0 * true_positives/(2*true_positives + false_positives+false_negatives)
     f2 = (1+2.0*2.0) * precision*recall/(4*precision + recall)
+    selector = clf.named_steps['feature_selection']
+    feature_scores = sorted([(f,s) for f,s in zip(features_list, selector.scores_)], key=lambda x: x[1], reverse=True)
     print clf
     print PERF_FORMAT_STRING.format(accuracy, precision, recall, f1, f2, display_precision = 5)
     print RESULTS_FORMAT_STRING.format(total_predictions, true_positives, false_positives, false_negatives, true_negatives)
     print ""
+    print 'Feature Selection Results:'
+    for f,s in feature_scores:
+        print ' - %s: %f' % (f,s)
 except Exception as e:
     print 'Exception thrown while computing training/prediction results'
     print e
